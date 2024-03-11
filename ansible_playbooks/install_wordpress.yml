@@ -1,0 +1,29 @@
+- name: Installing and setting-up WordPress
+  hosts: myhosts
+  tasks:
+    - name: Get docker-compose from host
+      copy:
+        src: ../docker-compose.yml
+        dest: ~/docker-compose.yml
+
+    - name: Get from containers repo from host
+      copy:
+        src: ../containers
+        dest: .
+
+    - name: Get secrets
+      include_vars:
+        file: secrets.yml
+        name: secrets
+
+    - name: docker-compose up -d with secrets
+      command: docker-compose up -d
+      environment:
+        WP_DB: "{{ secrets.wp_db }}"
+        WP_USER: "{{ secrets.wp_user }}"
+        WP_PWD: "{{ secrets.wp_pwd }}"
+        WP_NAME: "{{ secrets.wp_name }}"
+        PMA_HOST: "{{ secrets.pma_host }}"
+        MYSQL_PWD: "{{ secrets.mysql_pwd }}"
+        MYSQL_DB: "{{ secrets.mysql_db }}"
+        MYSQL_USER: "{{ secrets.mysql_user }}"

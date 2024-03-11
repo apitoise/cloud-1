@@ -2,16 +2,22 @@ version: '3.8'
 
 services:
   wordpress:
-    image: wordpress:latest
+    build: ./containers/wordpress
     ports:
       - "80:80"
     depends_on:
       - db
     environment:
-      WORDPRESS_DB_HOST: "{{ wp_host }}" # db
-      WORDPRESS_DB_USER: "{{ wp_user }}" # admin 
-      WORDPRESS_DB_PASSWORD: "{{ wp_pwd }}" # 4242
-      WORDPRESS_DB_NAME: "{{ wp_name }}" # wordpress
+      WORDPRESS_USER: "${WP_USER}"
+      WORDPRESS_PASSWORD: "${WP_PWD}"
+      WORDPRESS_DB_HOST: "${WP_DB}"
+      WORDPRESS_DB_USER: "${WP_DB}"
+      WORDPRESS_DB_PASSWORD: "${WP_PWD}"
+      WORDPRESS_DB_NAME: "${WP_NAME}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PWD}"
+      MYSQL_DATABASE: "${MYSQL_DB}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PWD}"
     volumes:
       - wordpress_data:/var/www/html
 
@@ -22,16 +28,16 @@ services:
     depends_on:
       - db
     environment:
-      PMA_HOST: "{{ pma_host }}" # db
-      MYSQL_ROOT_PASSWORD: "{{ mysql_pwd }}" # 4242
+      PMA_HOST: "${PMA_HOST}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PWD}"
 
   db:
     image: mariadb:latest
     environment:
-      MYSQL_ROOT_PASSWORD: "{{ mysql_pwd }}" # root
-      MYSQL_DATABASE: "{{ mysql_db }}" # wordpress
-      MYSQL_USER: "{{ mysql_user }}" # admin
-      MYSQL_PASSWORD: "{{ mysql_pwd }}" # 4242
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PWD}"
+      MYSQL_DATABASE: "${MYSQL_DB}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PWD}"
     volumes:
       - db_data:/var/lib/mysql
 
