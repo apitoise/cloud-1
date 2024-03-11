@@ -1,5 +1,5 @@
 myhosts:
   hosts:
     wordpress:
-      ansible_host: 127.0.0.1
+      ansible_host: root@51.15.227.249
       http_port: 80
