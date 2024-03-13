@@ -1,0 +1,5 @@
+wp_db_name: "wordpress"
+mysql_db: "wordpress"
+domain_url: "apitoise.rature.fr"
+wp_title: "Apitoise 42"
+admin_email: "email@email.fr"

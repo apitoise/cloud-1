@@ -1,0 +1,21 @@
+- name: Include defaults
+  include_vars:
+    file: ../../../defaults/main.yml
+
+- name: Get docker-compose from host
+  template:
+    src: docker-compose.yml.j2
+    dest: docker-compose.yml
+
+- name: Get WordPress install script
+  template:
+    src: wp_install.sh.j2
+    dest: wp_install.sh
+
+- name: Get Dockerfile
+  copy:
+    src: Dockerfile
+    dest: .
+
+- name: docker-compose up -d with secrets
+  command: docker-compose up -d

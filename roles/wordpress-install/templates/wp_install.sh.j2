@@ -1,0 +1,15 @@
+#!/bin/sh
+
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+
+cd /var/www/html
+
+wp core download --locale=fr_FR --allow-root
+
+wp config create --dbname="{{ wp_db_name }}" --dbuser="{{ wp_db_user }}" --dbpass="{{ wp_db_pwd }}" --locale=fr_FR --allow-root
+
+wp core install --url="{{ domain_url }}" --title="{{ wp_title }}" --admin_user="{{ wp_user }}" --admin_password="{{ wp_pwd }}" --admin_email="{{ admin_email }}" --skip-email --allow-root
+
+apache2-foreground

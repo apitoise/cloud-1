@@ -1,0 +1,7 @@
+---
+- hosts: myhosts
+  become: true
+
+  roles:
+    - docker-install
+    - wordpress-install
