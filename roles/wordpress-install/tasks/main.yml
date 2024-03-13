@@ -1,11 +1,12 @@
-- name: Include defaults
-  include_vars:
-    file: ../../../defaults/main.yml
-
 - name: Get docker-compose from host
   template:
     src: docker-compose.yml.j2
     dest: docker-compose.yml
+
+- name: Get wp-config.php
+  template:
+    src: wp-config.php.j2
+    dest: wp-config.php
 
 - name: Get WordPress install script
   template:

@@ -8,7 +8,8 @@ cd /var/www/html
 
 wp core download --locale=fr_FR --allow-root
 
-wp config create --dbname="{{ wp_db_name }}" --dbuser="{{ wp_db_user }}" --dbpass="{{ wp_db_pwd }}" --locale=fr_FR --allow-root
+echo "Waiting for database connection..."
+sleep 30
 
 wp core install --url="{{ domain_url }}" --title="{{ wp_title }}" --admin_user="{{ wp_user }}" --admin_password="{{ wp_pwd }}" --admin_email="{{ admin_email }}" --skip-email --allow-root
 
