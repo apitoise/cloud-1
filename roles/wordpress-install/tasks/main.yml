@@ -1,3 +1,11 @@
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - wp
+    - nginx
+
 - name: Get docker-compose from host
   template:
     src: docker-compose.yml.j2
@@ -6,17 +14,37 @@
 - name: Get wp-config.php
   template:
     src: wp-config.php.j2
-    dest: wp-config.php
+    dest: wp/wp-config.php
 
 - name: Get WordPress install script
   template:
     src: wp_install.sh.j2
-    dest: wp_install.sh
+    dest: wp/wp_install.sh
 
-- name: Get Dockerfile
+- name: Get WordPress Dockerfile
   copy:
-    src: Dockerfile
-    dest: .
+    src: wp_Dockerfile
+    dest: wp/Dockerfile
+
+- name: Get nginx Dockerfile
+  copy:
+    src: nginx_Dockerfile
+    dest: nginx/Dockerfile
+
+- name: Get nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: nginx/nginx.conf
+
+- name: Get certificate.crt
+  copy:
+    src: certificate.crt
+    dest: nginx/certificate.crt
+
+- name: Get private.key
+  copy:
+    src: private.key
+    dest: nginx/private.key
 
 - name: docker-compose up -d with secrets
   command: docker-compose up -d

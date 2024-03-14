@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   wordpress:
-    build: .
+    build: wp
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - db
     environment:
@@ -44,6 +44,16 @@ services:
       MYSQL_PASSWORD: "{{ mysql_pwd }}"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - cloud-1
+
+  nginx:
+    build: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - wordpress
     networks:
       - cloud-1
 
