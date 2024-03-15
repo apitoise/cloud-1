@@ -1,0 +1,93 @@
+user www-data;
+worker_processes 1;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 768;
+    # multi_accept on;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    server {
+        listen 443 ssl;
+        server_name {{ domain_url }};
+
+        ssl_certificate /etc/nginx/ssl/certificate.crt;
+        ssl_certificate_key /etc/nginx/ssl/private.key;
+
+        # Paramètres SSL supplémentaires
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers on;
+        ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+
+        # Autres configurations SSL selon vos besoins
+        ssl_session_timeout 1d;
+        ssl_session_cache shared:MozSSL:10m;
+        ssl_session_tickets off;
+
+        # Activer la redirection HTTP vers HTTPS
+        if ($scheme != "https") {
+            return 301 https://$host$request_uri;
+        }
+
+        root /var/www/html;
+        index index.php index.html index.htm;
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+        # Passer à PHP-FPM
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock; # À adapter selon votre version de PHP
+        }
+
+        # Bloquer l'accès aux fichiers de configuration
+        location ~ /\.ht {
+            deny all;
+        }
+
+        # Configurations additionnelles pour WordPress (facultatif)
+        # Rewrite pour les permaliens
+        #if (!-e $request_filename) {
+        #    rewrite ^/(.+)$ /index.php?q=$1 last;
+        #}
+
+        # Gestion des fichiers statiques
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+            expires max;
+            log_not_found off;
+        }
+
+        # Fichiers cachés
+        location ~ /\. {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+
+        # Accès aux fichiers robots.txt et sitemap.xml
+        location = /robots.txt { }
+        location = /sitemap.xml { }
+
+        # Accès aux fichiers statiques XML
+        location ~* \.(xml)$ {
+            expires 15d;
+        }
+
+        # Accès aux fichiers statiques TXT
+        location ~* \.(txt)$ {
+            expires 15d;
+        }
+
+        # Accès aux fichiers statiques JSON
+        location ~* \.(json)$ {
+            expires 15d;
+        }
+    }
+}
+

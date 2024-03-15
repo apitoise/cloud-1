@@ -3,21 +3,11 @@ version: '3.8'
 services:
   wordpress:
     build: wp
-    ports:
-      - "8080:80"
+    expose:
+      - "80"
     depends_on:
       - db
-    environment:
-      WORDPRESS_USER: "{{ wp_user }}"
-      WORDPRESS_PASSWORD: "{{ wp_pwd }}"
-      WORDPRESS_DB_HOST: "{{ wp_db_host }}"
-      WORDPRESS_DB_USER: "{{ wp_db_user }}"
-      WORDPRESS_DB_PASSWORD: "{{ wp_db_pwd }}"
-      WORDPRESS_DB_NAME: "{{ wp_db_name }}"
-      MYSQL_ROOT_PASSWORD: "{{ mysql_root_pwd }}"
-      MYSQL_DATABASE: "{{ mysql_db }}"
-      MYSQL_USER: "{{ mysql_user }}"
-      MYSQL_PASSWORD: "{{ mysql_pwd }}"
+    restart: always
     volumes:
       - wordpress_data:/var/www/html
     networks:
@@ -25,11 +15,13 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    ports:
-      - "9090:80"
+    expose:
+      - "8080"
     depends_on:
       - db
+    restart: always
     environment:
+      PMA_PORT: "{{ pma_port }}"
       PMA_HOST: "{{ pma_host }}"
       MYSQL_ROOT_PASSWORD: "{{ mysql_root_pwd }}"
     networks:
@@ -37,6 +29,7 @@ services:
 
   db:
     image: mariadb:latest
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "{{ mysql_root_pwd }}"
       MYSQL_DATABASE: "{{ mysql_db }}"
@@ -52,8 +45,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     depends_on:
       - wordpress
+    restart: always
     networks:
       - cloud-1
 
