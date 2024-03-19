@@ -34,14 +34,4 @@ http {
         }
 
     }
-
-    server {
-        listen 8080;
-        server_name {{ domain_url }};
-
-        location / {
-            allow {{ server_ip }};
-            deny all;
-        }
-    }
 }
