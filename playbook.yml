@@ -3,5 +3,5 @@
   become: true
 
   roles:
-    - docker-install
-    - wordpress-install
+    - docker_install
+    - wordpress_install
