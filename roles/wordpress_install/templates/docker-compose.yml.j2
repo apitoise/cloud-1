@@ -4,12 +4,12 @@ services:
   wordpress:
     build: wp
     expose:
-      - "80"
+      - "9000"
     depends_on:
       - db
     restart: always
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/wordpress
     networks:
       - cloud-1
 
@@ -45,10 +45,11 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     depends_on:
       - wordpress
     restart: always
+    volumes:
+      - wordpress_data:/var/www/wordpress
     networks:
       - cloud-1
 

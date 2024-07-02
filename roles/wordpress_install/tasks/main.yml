@@ -31,10 +31,20 @@
     src: nginx_Dockerfile
     dest: nginx/Dockerfile
 
+- name: Get www.conf
+  copy:
+    src: www.conf
+    dest: wp/www.conf
+
 - name: Get nginx.conf
-  template:
-    src: nginx.conf.j2
+  copy:
+    src: nginx.conf
     dest: nginx/nginx.conf
+
+- name: Get rature.fr.conf
+  template:
+    src: apitoise.rature.fr.conf.j2
+    dest: nginx/apitoise.rature.fr.conf
 
 - name: Get certificate.crt
   copy:
