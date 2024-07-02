@@ -15,8 +15,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    expose:
-      - "8080"
     depends_on:
       - db
     restart: always
